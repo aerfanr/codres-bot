@@ -1,5 +1,7 @@
+#!/usr/bin/python3
 """A telegram bot for sending codeforces events to a channel"""
 from datetime import datetime
+import os
 import time
 import json
 import requests
@@ -7,16 +9,16 @@ import redis
 import telegram
 
 URL = 'https://clist.by/api/v2/contest/'
-APIKEY = 'ApiKey aerfanr:32949df29c39442163cbd8f9fd77a01fe13cb5a9'
+APIKEY = os.environ['CODRES_APIKEY']
 HEADERS = {
-    'Authorization': APIKEY
+    'Authorization': 'ApiKey {}'.format(APIKEY)
 }
 
-REDIS_HOST = 'localhost'
-REDIS_PORT = 6379
+REDIS_HOST = os.environ['CODRES_DB_HOST']
+REDIS_PORT = int(os.environ['CODRES_DB_PORT'])
 
-TELEGRAM_KEY = '1913482918:AAGYTFvrTXWzza-2fsjqO_hXVLXnRqzVHz0'
-TELEGRAM_ID = '@codres_test'
+TELEGRAM_KEY = os.environ['CODRES_TELEGRAM_KEY']
+TELEGRAM_ID = os.environ['CODRES_TELEGRAM_ID']
 
 with open('./config/message1') as file:
     MESSAGE1 = file.read()
