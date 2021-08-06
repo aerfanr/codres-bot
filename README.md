@@ -4,7 +4,6 @@ A telegram bot for sending Competetive Programming contest notifications to chan
 ## TODO:
 * Time formatting support
 * Persian time support
-* Import from other Competitive Programming platforms
 * Regex filtering support
 
 ## Manual deployment
