@@ -20,11 +20,19 @@ REDIS_PORT = int(os.environ['CODRES_DB_PORT'])
 TELEGRAM_KEY = os.environ['CODRES_TELEGRAM_KEY']
 TELEGRAM_ID = os.environ['CODRES_TELEGRAM_ID']
 
+#read message templates
 with open('./config/message1') as file:
     MESSAGE1 = file.read()
 
 with open('./config/message2') as file:
     MESSAGE2 = file.read()
+
+#read resource list
+with open('./config/resources') as file:
+    resources = file.readlines()
+    RESOURCES = ''
+    for line in resources:
+        RESOURCES += line.rstrip() + ','
 
 db = redis.Redis(host=REDIS_HOST, port=REDIS_PORT)
 
@@ -109,7 +117,7 @@ def get_events():
     #get at most 5 events starting after current time
     payload = {
         'limit': 5,
-        'resource': 'codeforces.com',
+        'resource': RESOURCES,
         'order_by': 'id',
         'start__gt': current_time
     }
