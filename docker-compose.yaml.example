@@ -1,0 +1,22 @@
+version: "3.7"
+
+services:
+        codres:
+                image: "aerfanr/codres-bot:latest"
+                volumes:
+                        - ./config:/usr/src/app/config
+                environment:
+                        - CODRES_APIKEY
+                        - CODRES_TELEGRAM_KEY
+                        - CODRES_TELEGRAM_ID
+                        - CODRES_DB_HOST
+                        - CODRES_DB_PORT
+                depends_on:
+                        - db
+        db:
+                image: "redis"
+                volumes:
+                        - db:/data
+
+volumes:
+        db:
