@@ -2,7 +2,7 @@
 A telegram bot for sending Competetive Programming contest notifications to channels.
 
 ## TODO for next release:
-- [ ] Time formatting support
+- [x] Time formatting support
 - [ ] Persian date support
 - [ ] Regex filtering support
 - [x] Multiple resources support
