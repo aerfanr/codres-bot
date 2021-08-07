@@ -16,8 +16,10 @@ export CODRES_TELEGRAM_ID=""
 # export CODRES_DB_HOST="localhost"
 # export CODRES_DB_PORT="6379"
 
-#Datetime format and timezone detailes
+#Datetime format and timezone and calendar detailes
 # export CODRES_DATETIME_FORMAT="%Y-%m-%d %H:%M"
 # export CODRES_TIMEZONE="UTC"
+#Calendar could be 'gregorian' or 'jalali'
+# export CODRES_CALENDAR="gregorian"
 
 python3 main.py

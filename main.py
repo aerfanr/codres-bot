@@ -5,6 +5,7 @@ from zoneinfo import ZoneInfo
 import os
 import time
 import json
+import jdatetime
 import requests
 import redis
 import telegram
@@ -21,6 +22,7 @@ TELEGRAM_ID = os.environ.get('CODRES_TELEGRAM_ID')
 SERVER_DATETIME = '%Y-%m-%dT%H:%M:%S'
 DATETIME_FORMAT = os.environ.get('CODRES_DATETIME_FORMAT', '%Y-%m-%d %H:%M')
 TIMEZONE = os.environ.get('CODRES_TIMEZONE', 'UTC')
+CALENDAR = os.environ.get('CODRES_CALENDAR', 'gregorian')
 
 #read message templates
 with open('./config/message1') as file:
@@ -72,11 +74,15 @@ def add_event(event, msg_id):
         'href': event['href']
     })
 
-def convert_datetime(datetimestring):
+def convert_datetime(dt_string):
     """Convert server datetime to correct datetime"""
-    result = datetime(*time.strptime(datetimestring, SERVER_DATETIME)[0:6],
+    result_dt = datetime(*time.strptime(dt_string, SERVER_DATETIME)[0:6],
                       tzinfo=ZoneInfo('UTC')).astimezone(ZoneInfo(TIMEZONE))
-    return datetime.strftime(result, DATETIME_FORMAT)
+
+    if CALENDAR == 'jalali':
+        result = jdatetime.datetime.fromgregorian(datetime=result_dt)
+        return jdatetime.datetime.strftime(result, DATETIME_FORMAT)
+    return datetime.strftime(result_dt, DATETIME_FORMAT)
 
 def send_message(event):
     """Sends message for new event and return message id"""
