@@ -1,10 +1,11 @@
 # codres-bot
 A telegram bot for sending Competetive Programming contest notifications to channels.
 
-## TODO:
-* Time formatting support
-* Persian time support
-* Regex filtering support
+## TODO for next release:
+- [ ] Time formatting support
+- [ ] Persian date support
+- [ ] Regex filtering support
+- [x] Multiple resources support
 
 ## Manual deployment
 1. Deploy a redis server
