@@ -9,16 +9,13 @@ import redis
 import telegram
 
 URL = 'https://clist.by/api/v2/contest/'
-APIKEY = os.environ['CODRES_APIKEY']
-HEADERS = {
-    'Authorization': 'ApiKey {}'.format(APIKEY)
-}
+APIKEY = os.environ.get('CODRES_APIKEY')
 
-REDIS_HOST = os.environ['CODRES_DB_HOST']
-REDIS_PORT = int(os.environ['CODRES_DB_PORT'])
+REDIS_HOST = os.environ.get('CODRES_DB_HOST', 'localhost')
+REDIS_PORT = int(os.environ.get('CODRES_DB_PORT', '6379'))
 
-TELEGRAM_KEY = os.environ['CODRES_TELEGRAM_KEY']
-TELEGRAM_ID = os.environ['CODRES_TELEGRAM_ID']
+TELEGRAM_KEY = os.environ.get('CODRES_TELEGRAM_KEY', '')
+TELEGRAM_ID = os.environ.get('CODRES_TELEGRAM_ID')
 
 #read message templates
 with open('./config/message1') as file:
@@ -115,6 +112,9 @@ def get_events():
     current_time = now.strftime("%Y-%m-%d %H:%M")
 
     #get at most 5 events starting after current time
+    headers = {
+        'Authorization': 'ApiKey {}'.format(APIKEY)
+    }
     payload = {
         'limit': 5,
         'resource': RESOURCES,
@@ -122,7 +122,7 @@ def get_events():
         'start__gt': current_time
     }
     response = json.loads(
-        requests.get(URL, headers=HEADERS, params=payload).text
+        requests.get(URL, headers=headers, params=payload).text
     )
 
     #check each event
