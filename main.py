@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """A telegram bot for sending codeforces events to a channel"""
-from datetime import datetime
+from datetime import datetime, timezone
+from zoneinfo import ZoneInfo
 import os
 import time
 import json
@@ -16,6 +17,10 @@ REDIS_PORT = int(os.environ.get('CODRES_DB_PORT', '6379'))
 
 TELEGRAM_KEY = os.environ.get('CODRES_TELEGRAM_KEY', '')
 TELEGRAM_ID = os.environ.get('CODRES_TELEGRAM_ID')
+
+SERVER_DATETIME = '%Y-%m-%dT%H:%M:%S'
+DATETIME_FORMAT = os.environ.get('CODRES_DATETIME_FORMAT', '%Y-%m-%d %H:%M')
+TIMEZONE = os.environ.get('CODRES_TIMEZONE', 'UTC')
 
 #read message templates
 with open('./config/message1') as file:
@@ -67,10 +72,18 @@ def add_event(event, msg_id):
         'href': event['href']
     })
 
+def convert_datetime(datetimestring):
+    """Convert server datetime to correct datetime"""
+    result = datetime(*time.strptime(datetimestring, SERVER_DATETIME)[0:6],
+                      tzinfo=ZoneInfo('UTC')).astimezone(ZoneInfo(TIMEZONE))
+    return datetime.strftime(result, DATETIME_FORMAT)
+
 def send_message(event):
     """Sends message for new event and return message id"""
     text = MESSAGE1.format(
-        name=event['event'], start=event['start'], href=event['href']
+        name=event['event'],
+        start=convert_datetime(event['start']),
+        href=event['href']
     )
     return bot.send_message(text=text, chat_id=TELEGRAM_ID, parse_mode='HTML'
                             )['message_id']
@@ -78,10 +91,15 @@ def send_message(event):
 def update_message(event, msg_id):
     """Update message for existing event"""
     text1 = MESSAGE1.format(
-        name=event['event'], start=event['start'], href=event['href']
+        name=event['event'],
+        start=convert_datetime(event['start']),
+        href=event['href']
     )
-    text2 = MESSAGE2.format(name=event['event'], start=event['start'],
-                            href=event['href'])
+    text2 = MESSAGE2.format(
+        name=event['event'],
+        start=convert_datetime(event['start']),
+        href=event['href']
+    )
     bot.edit_message_text(text=text1, message_id=msg_id, chat_id=TELEGRAM_ID,
                           parse_mode='HTML')
     bot.send_message(text=text2, reply_to_message_id=msg_id,
@@ -108,7 +126,7 @@ def check_event(event):
 def get_events():
     """Get list of events and checks for changes"""
     #get current time
-    now = datetime.now()
+    now = datetime.now(timezone.utc)
     current_time = now.strftime("%Y-%m-%d %H:%M")
 
     #get at most 5 events starting after current time
@@ -118,7 +136,7 @@ def get_events():
     payload = {
         'limit': 5,
         'resource': RESOURCES,
-        'order_by': 'id',
+        'order_by': 'start',
         'start__gt': current_time
     }
     response = json.loads(
