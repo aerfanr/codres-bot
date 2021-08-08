@@ -2,16 +2,18 @@
 import os
 from redis import Redis
 
-#define constants
+# define constants
 REDIS_HOST = os.environ.get('CODRES_DB_HOST', 'localhost')
 REDIS_PORT = int(os.environ.get('CODRES_DB_PORT', '6379'))
 
-#initialize database connection
+# initialize database connection
 db = Redis(host=REDIS_HOST, port=REDIS_PORT)
+
 
 def id_exists(event_id):
     """Return true if an event with id exists"""
     return db.exists(event_id)
+
 
 def event_changed(event):
     """Return true if event is changed"""
@@ -29,6 +31,7 @@ def event_changed(event):
 
     return result
 
+
 def add_event(event, msg_id):
     """Add event to database"""
     db.hset(event['id'], 'msg_id', msg_id, {
@@ -36,6 +39,7 @@ def add_event(event, msg_id):
         'start': event['start'],
         'href': event['href']
     })
+
 
 def get_msg_id(event_id):
     """Return message id for event"""

@@ -6,14 +6,14 @@ import time
 import jdatetime
 import telegram
 
-#read message templates
+# read message templates
 with open('./config/message1') as file:
     MESSAGE1 = file.read()
 
 with open('./config/message2') as file:
     MESSAGE2 = file.read()
 
-#define constants
+# define constants
 TELEGRAM_KEY = os.environ.get('CODRES_TELEGRAM_KEY', '')
 TELEGRAM_ID = os.environ.get('CODRES_TELEGRAM_ID')
 
@@ -23,18 +23,20 @@ TIMEZONE = os.environ.get('CODRES_TIMEZONE', 'UTC')
 CALENDAR = os.environ.get('CODRES_CALENDAR', 'gregorian')
 
 
-#initialize telegram bot connection
+# initialize telegram bot connection
 bot = telegram.Bot(token=TELEGRAM_KEY)
+
 
 def convert_datetime(dt_string):
     """Convert server datetime to correct datetime"""
     result_dt = datetime(*time.strptime(dt_string, SERVER_DATETIME)[0:6],
-                      tzinfo=ZoneInfo('UTC')).astimezone(ZoneInfo(TIMEZONE))
+                         tzinfo=ZoneInfo('UTC')).astimezone(ZoneInfo(TIMEZONE))
 
     if CALENDAR == 'jalali':
         result = jdatetime.datetime.fromgregorian(datetime=result_dt)
         return jdatetime.datetime.strftime(result, DATETIME_FORMAT)
     return datetime.strftime(result_dt, DATETIME_FORMAT)
+
 
 def send_message(event):
     """Sends message for new event and return message id"""
@@ -45,6 +47,7 @@ def send_message(event):
     )
     return bot.send_message(text=text, chat_id=TELEGRAM_ID, parse_mode='HTML'
                             )['message_id']
+
 
 def update_message(event, msg_id):
     """Update message for existing event"""
