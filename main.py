@@ -5,15 +5,12 @@ import os
 import time
 import json
 import requests
-import redis
 
 from output import send_message, update_message
+from db import id_exists, event_changed, add_event, get_msg_id
 
 URL = 'https://clist.by/api/v2/contest/'
 APIKEY = os.environ.get('CODRES_APIKEY')
-
-REDIS_HOST = os.environ.get('CODRES_DB_HOST', 'localhost')
-REDIS_PORT = int(os.environ.get('CODRES_DB_PORT', '6379'))
 
 #read resource list
 with open('./config/resources') as file:
@@ -21,40 +18,6 @@ with open('./config/resources') as file:
     RESOURCES = ''
     for line in resources:
         RESOURCES += line.rstrip() + ','
-
-db = redis.Redis(host=REDIS_HOST, port=REDIS_PORT)
-
-def id_exists(event_id):
-    """Return true if an event with id exists"""
-    return db.exists(event_id)
-
-def event_changed(event):
-    """Return true if event is changed"""
-    event_name = db.hget(event['id'], 'name')
-    event_start = db.hget(event['id'], 'start')
-    event_href = db.hget(event['id'], 'href')
-
-    result = False
-    if event['event'] == event_name:
-        result = True
-    if event['start'] == event_start:
-        result = True
-    if event['href'] == event_href:
-        result = True
-
-    return result
-
-def add_event(event, msg_id):
-    """Add event to database"""
-    db.hset(event['id'], 'msg_id', msg_id, {
-        'name': event['event'],
-        'start': event['start'],
-        'href': event['href']
-    })
-
-def get_msg_id(event_id):
-    """Return message id for event"""
-    return db.hget(event_id, 'msg_id')
 
 def check_event(event):
     """Check message status of event and send necessery messages"""
