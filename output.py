@@ -7,10 +7,11 @@ import jdatetime
 import telegram
 
 # read message templates
-with open('./config/message1') as file:
+CONFIG_DIR = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'config/')
+with open(os.path.join(CONFIG_DIR, 'message1')) as file:
     MESSAGE1 = file.read()
 
-with open('./config/message2') as file:
+with open(os.path.join(CONFIG_DIR, 'message2')) as file:
     MESSAGE2 = file.read()
 
 # define constants

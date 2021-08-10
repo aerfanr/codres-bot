@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """A telegram bot for sending codeforces events to a channel"""
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 import os
 import time
 import json
@@ -12,8 +12,12 @@ from db import id_exists, event_changed, add_event, get_msg_id
 URL = 'https://clist.by/api/v2/contest/'
 APIKEY = os.environ.get('CODRES_APIKEY')
 
+SERVER_DATETIME = '%Y-%m-%dT%H:%M:%S'
+
+CONFIG_DIR = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'config/')
+
 # read resource list
-with open('./config/resources') as file:
+with open(os.path.join(CONFIG_DIR, 'resources')) as file:
     resources = file.readlines()
     RESOURCES = ''
     for line in resources:
@@ -38,17 +42,18 @@ def get_events():
     """Get list of events and checks for changes"""
     # get current time
     now = datetime.now(timezone.utc)
-    current_time = now.strftime("%Y-%m-%d %H:%M")
+    min_time = now.strftime(SERVER_DATETIME)
+    max_time = (now + timedelta(weeks=1)).strftime(SERVER_DATETIME)
 
     # get at most 5 events starting after current time
     headers = {
         'Authorization': 'ApiKey {}'.format(APIKEY)
     }
     payload = {
-        'limit': 5,
         'resource': RESOURCES,
         'order_by': 'start',
-        'start__gt': current_time
+        'start__gt': min_time,
+        'start__lt': max_time
     }
     response = json.loads(
         requests.get(URL, headers=headers, params=payload).text
@@ -56,10 +61,12 @@ def get_events():
 
     # check each event
     for event in response['objects']:
+        print(event)
         check_event(event)
 
 
 if __name__ == '__main__':
+    print("Codres bot is running")
     while True:
         get_events()
         time.sleep(60)
