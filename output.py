@@ -1,28 +1,12 @@
 """Output functions for codres-bot"""
-import os
 from datetime import datetime
 from zoneinfo import ZoneInfo
 import time
 import jdatetime
 import telegram
 
-# read message templates
-CONFIG_DIR = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'config/')
-with open(os.path.join(CONFIG_DIR, 'message1')) as file:
-    MESSAGE1 = file.read()
-
-with open(os.path.join(CONFIG_DIR, 'message2')) as file:
-    MESSAGE2 = file.read()
-
-# define constants
-TELEGRAM_KEY = os.environ.get('CODRES_TELEGRAM_KEY', '')
-TELEGRAM_ID = os.environ.get('CODRES_TELEGRAM_ID')
-
-SERVER_DATETIME = '%Y-%m-%dT%H:%M:%S'
-DATETIME_FORMAT = os.environ.get('CODRES_DATETIME_FORMAT', '%Y-%m-%d %H:%M')
-TIMEZONE = os.environ.get('CODRES_TIMEZONE', 'UTC')
-CALENDAR = os.environ.get('CODRES_CALENDAR', 'gregorian')
-
+from constants import TELEGRAM_ID, TELEGRAM_KEY, DATETIME_FORMAT, TIMEZONE
+from constants import CALENDAR, MESSAGE1, MESSAGE2, SERVER_DATETIME
 
 # initialize telegram bot connection
 bot = telegram.Bot(token=TELEGRAM_KEY)

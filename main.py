@@ -1,27 +1,13 @@
 #!/usr/bin/python3
 """A telegram bot for sending codeforces events to a channel"""
 from datetime import datetime, timezone, timedelta
-import os
 import time
 import json
 import requests
 
+from constants import URL, APIKEY, SERVER_DATETIME, RESOURCES
 from output import send_message, update_message
 from db import id_exists, event_changed, add_event, get_msg_id
-
-URL = 'https://clist.by/api/v2/contest/'
-APIKEY = os.environ.get('CODRES_APIKEY')
-
-SERVER_DATETIME = '%Y-%m-%dT%H:%M:%S'
-
-CONFIG_DIR = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'config/')
-
-# read resource list
-with open(os.path.join(CONFIG_DIR, 'resources')) as file:
-    resources = file.readlines()
-    RESOURCES = ''
-    for line in resources:
-        RESOURCES += line.rstrip() + ','
 
 
 def check_event(event):

@@ -1,10 +1,7 @@
 """Database functions for codres-bot"""
-import os
 from redis import Redis
 
-# define constants
-REDIS_HOST = os.environ.get('CODRES_DB_HOST', 'localhost')
-REDIS_PORT = int(os.environ.get('CODRES_DB_PORT', '6379'))
+from constants import REDIS_HOST, REDIS_PORT
 
 # initialize database connection
 db = Redis(host=REDIS_HOST, port=REDIS_PORT)
