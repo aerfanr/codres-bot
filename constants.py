@@ -33,3 +33,14 @@ with open(os.path.join(CONFIG_DIR, 'resources')) as file:
     RESOURCES = ''
     for line in resources:
         RESOURCES += line.rstrip() + ','
+
+FILTERS = {}
+with open(os.path.join(CONFIG_DIR, 'filters')) as file:
+    lines = file.readlines()
+    for line in lines:
+        key = line.split()[0]
+        value = line[len(key) + 1:].rstrip()
+        print(key, value)
+        if not key in FILTERS:
+            FILTERS[key] = []
+        FILTERS[key].append(value)

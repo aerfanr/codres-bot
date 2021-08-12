@@ -1,19 +1,36 @@
 #!/usr/bin/python3
 """A telegram bot for sending codeforces events to a channel"""
 from datetime import datetime, timezone, timedelta
+from sys import stderr
+import re
 import time
 import json
 import requests
 
-from constants import URL, APIKEY, SERVER_DATETIME, RESOURCES
+from constants import URL, APIKEY, SERVER_DATETIME, RESOURCES, FILTERS
 from output import send_message, update_message
 from db import id_exists, event_changed, add_event, get_msg_id
 
 
 def check_event(event):
     """Check message status of event and send necessery messages"""
+    #Check patterns for resource, return if nothing matched
+    matched = False
+    try:
+        for pattern in FILTERS[event['resource']]:
+            if re.fullmatch(pattern, event['event']):
+                matched = True
+                break
+        if not matched:
+            return
+    except KeyError:
+        print('No pattern is defined for resource {}.'
+              .format(event['resource']), file=stderr)
+        return
+
     if not id_exists(event['id']):
         # add event and send message if event does not exist in database
+        print('New event: {}'.format(event['id']))
         add_event(event, send_message(event))
     else:
         if event_changed(event):
@@ -47,7 +64,6 @@ def get_events():
 
     # check each event
     for event in response['objects']:
-        print(event)
         check_event(event)
 
 
