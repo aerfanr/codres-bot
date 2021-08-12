@@ -2,7 +2,7 @@
 A telegram bot for sending Competetive Programming contest notifications to channels.
 
 ## TODO for next release:
-- [ ] Regex filtering support
+- [x] Regex filtering support
 
 ## Manual deployment
 1. Deploy a redis server
