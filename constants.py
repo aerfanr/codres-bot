@@ -1,23 +1,6 @@
 """This module defines constants for Codres bot"""
 import os
-
-# Clist related
-URL = 'https://clist.by/api/v2/contest/'
-APIKEY = os.environ.get('CODRES_APIKEY')
-SERVER_DATETIME = '%Y-%m-%dT%H:%M:%S'
-
-# databse related
-REDIS_HOST = os.environ.get('CODRES_DB_HOST', 'localhost')
-REDIS_PORT = int(os.environ.get('CODRES_DB_PORT', '6379'))
-
-# telegram related
-TELEGRAM_KEY = os.environ.get('CODRES_TELEGRAM_KEY', '')
-TELEGRAM_ID = os.environ.get('CODRES_TELEGRAM_ID')
-
-# datetime related
-DATETIME_FORMAT = os.environ.get('CODRES_DATETIME_FORMAT', '%Y-%m-%d %H:%M')
-TIMEZONE = os.environ.get('CODRES_TIMEZONE', 'UTC')
-CALENDAR = os.environ.get('CODRES_CALENDAR', 'gregorian')
+import yaml
 
 # config related
 CONFIG_DIR = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'config/')
@@ -44,3 +27,24 @@ with open(os.path.join(CONFIG_DIR, 'filters')) as file:
         if not key in FILTERS:
             FILTERS[key] = []
         FILTERS[key].append(value)
+
+
+URL = 'https://clist.by/api/v2/contest/'
+SERVER_DATETIME = '%Y-%m-%dT%H:%M:%S'
+
+CONFIG_FILE_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)),
+                                'conf.yaml')
+
+with open(CONFIG_FILE_PATH) as config_yaml:
+    try:
+        config = yaml.safe_load(config_yaml)
+        APIKEY = config['clist-apikey']
+        REDIS_HOST = config.get('db-host', 'localhost')
+        REDIS_PORT = config.get('db-port', 6379)
+        TELEGRAM_KEY = config['bot-token']
+        TELEGRAM_ID = config['channel-id']
+        DATETIME_FORMAT = config.get('datetime-format', '%Y-%m-%d %H:%M')
+        TIMEZONE = config.get('timezone', 'UTC')
+        CALENDAR = config.get('calendar', 'gregorian')
+    except yaml.YAMLError as exc:
+        print(exc)
