@@ -14,7 +14,7 @@ git clone https://github.com/aerfanr/codres-bot.git
 ```
 pip install -r requirements.txt
 ```
-5. Modify `launch.sh` file. You may need to change `CODRES_DB_HOST` and `CODRES_DB_PORT` fields.
+5. Modify `conf.yaml` file. You should change specify `clist-apikey`, `bot-token` and `channel-id`. You may also want to change other variables.
 6. Execute `launch.sh`.
 ```
 ./launch.sh
@@ -42,21 +42,19 @@ docker-compose up -d
 You can also deploy the bot using other tools (Docker without compose, podman etc.)
 
 ## Configuration
-Configuration is available using environment variables and files in `config` directory.
-### Changing environment variables
-You can change environment variables by editing `launch.sh` file or in docker, using `-e` run option or specifying them in `docker-compose.yaml`.
-### List of environment variables
-|  environment variable  |  default value |                    description                    |
-|:----------------------:|:--------------:|:-------------------------------------------------:|
-|      CODRES_APIKEY     |                |                   Clist API Key                   |
-|   CODRES_TELEGRAM_KEY  |                |               Telegram bot API Token              |
-|   CODRES_TELEGRAM_ID   |                |   Telegram channel ID (prefixed with '@' or '-')  |
-|     CODRES_DB_HOST     |    localhost   |              Redis database hostname              |
-|     CODRES_DB_PORT     |      6379      |                Redis database port                |
-| CODRES_DATETIME_FORMAT | %Y-%m-%d %H:%M |            Date and time output format            |
-|     CODRES_TIMEZONE    |       UTC      |      Output Timezone, example: 'Asia/Tehran'      |
-|     CODRES_CALENDAR    |    gregorian   | Calendar to use, options: ['gregorian', 'jalali'] |
-### Changing config files
+Configuration is possible using `conf.yaml` file and files in `config` directory.
+### List of `conf.yaml` options
+|  variable name  |   default value  |                    description                    |
+|:---------------:|:----------------:|:-------------------------------------------------:|
+|   clist-apikey  |                  |                   Clist API Key                   |
+|     db-host     |    "localhost"   |              Redis database hostname              |
+|     db-port     |       6379       |                Redis database port                |
+|    bot-token    |                  |               Telegram bot API token              |
+|    channel-id   |                  |   Telegram channel ID (prefixed with '@' or '-')  |
+| datetime-format | "%Y-%m-%d %H:%M" |            Date and time output format            |
+|     timezone    |       "UTC"      |      Output timezone, example: 'Asia/Tehran'      |
+|     calendar    |    "gregorian"   | Calendar to use, options: ['gregorian', 'jalali'] |
+### Changing other config files
 If you are using docker, you should mount a volume on `/usr/src/app/config` and add your templates there. For docker-compose, you can add this to `codres` service in `docker-compose.yaml`:
 ```
 codres:
