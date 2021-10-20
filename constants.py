@@ -1,8 +1,8 @@
 """This module defines constants for Codres bot"""
 import os
+import sys
 import yaml
 
-# config related
 CONFIG_DIR = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'config/')
 
 with open(os.path.join(CONFIG_DIR, 'message1')) as file:
@@ -32,8 +32,12 @@ with open(os.path.join(CONFIG_DIR, 'filters')) as file:
 URL = 'https://clist.by/api/v2/contest/'
 SERVER_DATETIME = '%Y-%m-%dT%H:%M:%S'
 
+# Defualt config file is config.yaml in the script directory
 CONFIG_FILE_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)),
                                 'conf.yaml')
+# Change the config file if it is specified in command arguments
+if len(sys.argv) > 1:
+    CONFIG_FILE_PATH = sys.argv[1]
 
 with open(CONFIG_FILE_PATH) as config_yaml:
     try:
