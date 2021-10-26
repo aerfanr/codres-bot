@@ -14,10 +14,10 @@ git clone https://github.com/aerfanr/codres-bot.git
 ```
 pip install -r requirements.txt
 ```
-5. Modify `conf.yaml` file. You should change specify `clist-apikey`, `bot-token` and `channel-id`. You may also want to change other variables.
-6. Execute `launch.sh`.
+5. Modify `conf.yaml` file. You should change specify `clist-apikey`, `bot-token` and `channel-id`. You may also want to change other variables. Or you can create a config file at a different path.
+6. Execute `launch.sh`. You may need to change the default config path if it is not `conf.yaml`.
 ```
-./launch.sh
+./launch.sh [path/to/config.yaml]
 ```
 
 ## Deployment using docker-compose
@@ -42,8 +42,8 @@ docker-compose up -d
 You can also deploy the bot using other tools (Docker without compose, podman etc.)
 
 ## Configuration
-Configuration is possible using `conf.yaml` file and files in `config` directory.
-### List of `conf.yaml` options
+Default config file is `conf.yaml` in the script directory. You can also specify a config file as a command line argument.
+### List of config options
 |  variable name  |   default value  |                    description                    |
 |:---------------:|:----------------:|:-------------------------------------------------:|
 |   clist-apikey  |                  |                   Clist API Key                   |
