@@ -11,7 +11,6 @@ from constants import URL, APIKEY, SERVER_DATETIME, RESOURCES, FILTERS
 from output import send_message, update_message
 from db import id_exists, event_changed, add_event, get_msg_id
 
-
 def check_event(event):
     """Check message status of event and send necessery messages"""
     #Check patterns for resource, return if nothing matched

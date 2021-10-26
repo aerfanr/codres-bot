@@ -3,52 +3,68 @@ import os
 import sys
 import yaml
 
-CONFIG_DIR = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'config/')
-
-with open(os.path.join(CONFIG_DIR, 'message1')) as file:
-    MESSAGE1 = file.read()
-
-with open(os.path.join(CONFIG_DIR, 'message2')) as file:
-    MESSAGE2 = file.read()
-
-with open(os.path.join(CONFIG_DIR, 'resources')) as file:
-    resources = file.readlines()
-    RESOURCES = ''
-    for line in resources:
-        RESOURCES += line.rstrip() + ','
-
-FILTERS = {}
-with open(os.path.join(CONFIG_DIR, 'filters')) as file:
-    lines = file.readlines()
-    for line in lines:
-        key = line.split()[0]
-        value = line[len(key) + 1:].rstrip()
-        print(key, value)
-        if not key in FILTERS:
-            FILTERS[key] = []
-        FILTERS[key].append(value)
-
-
 URL = 'https://clist.by/api/v2/contest/'
 SERVER_DATETIME = '%Y-%m-%dT%H:%M:%S'
 
+
+# initialize global variables
+APIKEY = ''
+REDIS_HOST = ''
+REDIS_PORT = ''
+TELEGRAM_KEY = ''
+TELEGRAM_ID = ''
+DATETIME_FORMAT = ''
+TIMEZONE = ''
+CALENDAR = ''
+MESSAGE1 = ''
+MESSAGE2 = ''
+RESOURCES = ''
+FILTERS = {}
+
+def read_config(path):
+    """Read config from path"""
+    global APIKEY
+    global REDIS_HOST
+    global REDIS_PORT
+    global TELEGRAM_KEY
+    global TELEGRAM_ID
+    global DATETIME_FORMAT
+    global TIMEZONE
+    global CALENDAR
+    global MESSAGE1
+    global MESSAGE2
+    global RESOURCES
+    global FILTERS
+    with open(path) as config_yaml:
+        try:
+            # Get config options
+            config = yaml.safe_load(config_yaml)
+            APIKEY = config.get('clist-apikey', APIKEY)
+            REDIS_HOST = config.get('db-host', REDIS_HOST)
+            REDIS_PORT = config.get('db-port', REDIS_PORT)
+            TELEGRAM_KEY = config.get('bot-token', TELEGRAM_KEY)
+            TELEGRAM_ID = config.get('channel-id', TELEGRAM_ID)
+            DATETIME_FORMAT = config.get('datetime-format', DATETIME_FORMAT)
+            TIMEZONE = config.get('timezone', TIMEZONE)
+            CALENDAR = config.get('calendar', CALENDAR)
+            MESSAGE1 = config.get('message1', MESSAGE1)
+            MESSAGE2 = config.get('message2', MESSAGE2)
+
+            # Get resource list
+            if config.get('resources', False):
+                resources = ''
+            for resource in config.get('resources', []):
+                RESOURCES += resource + ','
+
+            # Get filter list
+            FILTERS = config.get('filters', FILTERS)
+        except yaml.YAMLError as exc:
+            print(exc)
+
 # Defualt config file is config.yaml in the script directory
 CONFIG_FILE_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)),
-                                'conf.yaml')
+                                'defaults.yaml')
+read_config(CONFIG_FILE_PATH)
 # Change the config file if it is specified in command arguments
 if len(sys.argv) > 1:
-    CONFIG_FILE_PATH = sys.argv[1]
-
-with open(CONFIG_FILE_PATH) as config_yaml:
-    try:
-        config = yaml.safe_load(config_yaml)
-        APIKEY = config['clist-apikey']
-        REDIS_HOST = config.get('db-host', 'localhost')
-        REDIS_PORT = config.get('db-port', 6379)
-        TELEGRAM_KEY = config['bot-token']
-        TELEGRAM_ID = config['channel-id']
-        DATETIME_FORMAT = config.get('datetime-format', '%Y-%m-%d %H:%M')
-        TIMEZONE = config.get('timezone', 'UTC')
-        CALENDAR = config.get('calendar', 'gregorian')
-    except yaml.YAMLError as exc:
-        print(exc)
+    read_config(sys.argv[1])

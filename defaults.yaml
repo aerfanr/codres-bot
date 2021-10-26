@@ -1,0 +1,29 @@
+clist-apikey: "" # Do not include 'ApiKey'
+
+db-host: "localhost"
+db-port: 6379
+
+bot-token: ""
+channel-id: "" # Include '@' or '-'
+
+datetime-format: "%Y-%m-%d %H:%M"
+timezone: "UTC"
+calendar: "gregorian"
+
+resources:
+  - "codeforces.com"
+  - "atcoder.jp"
+
+filters:
+  codeforces.com:
+    - .*
+  atcoder.jp:
+    - .*
+
+message1: |
+  New contest!
+  Title: <b><a href="{href}"> {name} </a></b>
+  Time: {start}
+
+message2: |
+  {name} Updated!

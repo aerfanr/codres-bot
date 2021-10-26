@@ -1,11 +1,29 @@
-clist-apikey: "" # Do not include 'ApiKey'
+clist-apikey: "aerfanr:ae39f35367a440ae4601c790fa7fa20bc80d4bff" # Do not include 'ApiKey'
 
 #db-host: "localhost"
 #db-port: 6379
 
-bot-token: ""
-channel-id: "" # Include '@' or '-'
+bot-token: "1913482918:AAEq2sh9FgyyIudXB40Ake5h_uAIJiMLAAs"
+channel-id: "@codres_test" # Include '@' or '-'
 
 #datetime-format: "%Y-%m-%d %H:%M"
 #timezone: "UTC"
 #calendar: "gregorian"
+
+resources:
+  - "codeforces.com"
+  - "atcoder.jp"
+
+filters:
+  codeforces.com:
+    - .*Div\. [1-9].*
+  atcoder.jp:
+    - .*
+
+message1: |
+  New contest!
+  Title: <b><a href="{href}"> {name} </a></b>
+  Time: {start}
+
+message2: |
+  {name} Updated!
