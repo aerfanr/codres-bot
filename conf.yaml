@@ -1,29 +1,55 @@
-clist-apikey: "aerfanr:ae39f35367a440ae4601c790fa7fa20bc80d4bff" # Do not include 'ApiKey'
+# API key for clist You can get it from https://clist.by/api/v2/doc/
+# Example:
+#   clist-apikey: "aerfanr:28baasdfsdfasdbfdfsasdfhkaa6e5dee0b16d58f"
+clist-apikey: "" # Do not include 'ApiKey'
 
-#db-host: "localhost"
-#db-port: 6379
+# Redis connection information
+# db-host: "localhost"
+# db-port: 6379
 
-bot-token: "1913482918:AAEq2sh9FgyyIudXB40Ake5h_uAIJiMLAAs"
-channel-id: "@codres_test" # Include '@' or '-'
+# Telegram bot API key: You can get this from the Botfather.
+# Example:
+#   bot-token: "1913482918:AAEq2sh9FgyyIudXB40Ake5h_uAIJiMLAAs"
+bot-token: ""
 
-#datetime-format: "%Y-%m-%d %H:%M"
-#timezone: "UTC"
-#calendar: "gregorian"
+# Telegram channel id
+# Example:
+#   channel-id: "@codres_test"
+channel-id: "" # Include '@' or '-'
 
+# datetime-format: "%Y-%m-%d %H:%M"
+# timezone: "UTC"
+
+# Calendar: Available values are 'gregorian' and 'jalali'
+# calendar: "gregorian"
+
+# A list of all available resources is available at https://clist.by/resources/
 resources:
   - "codeforces.com"
   - "atcoder.jp"
 
+# Set a list of regex filters for each resource
+# Example:
+#   filters:
+#     codeforces.com:
+#       - .*Div\. [1-9].*
+#     atcoder.jp:
+#       - .*Beginner.*
+#       - .*Regular.*
 filters:
   codeforces.com:
     - .*Div\. [1-9].*
   atcoder.jp:
     - .*
 
-message1: |
-  New contest!
-  Title: <b><a href="{href}"> {name} </a></b>
-  Time: {start}
+# message text for new contests
+# Example:
+#   message1: |
+#     New contest!
+#     Title: <b><a href="{href}"> {name} </a></b>
+#     Time: {start}
 
-message2: |
-  {name} Updated!
+# message text for updates
+# Example:
+#   message2: |
+#     {name} Updated!
